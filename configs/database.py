@@ -1,23 +1,10 @@
 import os
-from flask_sqlalchemy import SQLAlchemy
-from flask import Flask
-from flask_cors import CORS
+from supabase import create_client, Client
 from dotenv import load_dotenv
 
-load_dotenv() 
+load_dotenv()
 
-db = SQLAlchemy()
+url: str = os.getenv("SUPABASE_URL")
+key: str = os.getenv("SUPABASE_KEY")
 
-def create_app():
-    app = Flask(__name__)
-    CORS(app)
-
-    database_url = os.getenv("DATABASE_URL")
-    if not database_url:
-        raise RuntimeError("DATABASE_URL is not set in .env")
-
-    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-    db.init_app(app)
-    return app
+supabase: Client = create_client(url, key)
