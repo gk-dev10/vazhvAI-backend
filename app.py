@@ -4,8 +4,27 @@ from routes.productRoutes import productRoutes
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app, resources={r"/auth/*": {"origins": ["http://localhost:5173"],"supports_credentials": True,"allow_headers": ["Authorization", "Content-Type"],"methods": ["GET", "POST", "PATCH", "OPTIONS"]}})
 
+# Configure CORS for API routes
+cors_config = {
+    "resources": {
+        r"/api/*": {
+            "origins": "http://localhost:5173",  # Change this to your frontend origin
+            "allow_headers": ["Content-Type", "Authorization"],
+            "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+        },
+        r"/products/*": {
+            "origins": "http://localhost:5173",  # Change this to your frontend origin
+            "allow_headers": ["Content-Type", "Authorization"],
+            "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+        },
+    },
+    "expose_headers": ["Content-Type", "Authorization"],
+}
+
+cors_config["supports_credentials"] = True
+
+CORS(app, **cors_config)
 app.register_blueprint(authRoutes, url_prefix="/api")
 app.register_blueprint(productRoutes, url_prefix="/products")
 
